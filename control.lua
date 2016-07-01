@@ -1,5 +1,3 @@
-require "defines"
-
 local config = require("config")
 
 function movestack(src, dst, stack)
