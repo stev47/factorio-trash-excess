@@ -11,6 +11,8 @@ function movestack(src, dst, stack)
 end
 
 function trashexcess(player)
+    if not player.controller_type == defines.controllers.character then return false end
+
     local invmain = player.get_inventory(defines.inventory.player_main)
     local invtrash = player.get_inventory(defines.inventory.player_trash)
 
@@ -23,12 +25,9 @@ function trashexcess(player)
     end
 end
 
-script.on_event(defines.events.on_tick, function(evt)
-    if evt.tick % config.trash_interval ~= 0 then return end
+function evt_trashexcess(evt)
+    trashexcess(game.players[evt.player_index])
+end
 
-    for _, player in pairs(game.players) do
-        if player.controller_type == defines.controllers.character then
-            trashexcess(player)
-        end
-    end
-end)
+script.on_event(defines.events.on_player_main_inventory_changed, evt_trashexcess)
+script.on_event(defines.events.on_player_quickbar_inventory_changed, evt_trashexcess)
